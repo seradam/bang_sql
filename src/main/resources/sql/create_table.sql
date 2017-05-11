@@ -113,3 +113,21 @@ INSERT INTO player(name, position, role, character, health, gun, barrel, mustang
 VALUES('Cecil', 3, 3, 3, 4, NULL, FALSE, FALSE, FALSE, FALSE, FALSE);
 INSERT INTO player(name, position, role, character, health, gun, barrel, mustang, scope, prison, dynamite)
 VALUES('Dénes', 4, 4, 4, 3, NULL, FALSE, FALSE, FALSE, FALSE, FALSE);
+
+INSERT INTO event(turn, player, card, target_player) VALUES(1, 1, 1, 2);
+INSERT INTO event(turn, player, card, target_player) VALUES(1, 2, 1, 3);
+INSERT INTO event(turn, player, card, target_player) VALUES(1, 3, 1, 4);
+INSERT INTO event(turn, player, card, target_player) VALUES(1, 4, 1, 1);
+
+
+
+SELECT player.name, role.name
+FROM role
+  JOIN player ON role.role_id = player.role
+  JOIN event ON player.player_id = event.player
+WHERE event.target_player =
+      (SELECT player.player_id
+       FROM player
+         JOIN role ON player.role = role.role_id
+       WHERE role.name = 'Sheriff');
+
