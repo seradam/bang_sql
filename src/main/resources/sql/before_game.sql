@@ -55,6 +55,7 @@ CREATE TABLE event
 
 CREATE TABLE playing_field
 (
+  temporary_id SERIAL PRIMARY KEY,
   player INTEGER,
   FOREIGN KEY (player) REFERENCES player(player_id),
   card INTEGER,
@@ -109,15 +110,6 @@ INSERT INTO card(name, kind, effect, initial_amount, current_amount) VALUES('Vol
 INSERT INTO card(name, kind, effect, initial_amount, current_amount) VALUES('Jail', 'punitive', '', 3, 3);
 INSERT INTO card(name, kind, effect, initial_amount, current_amount) VALUES('Dynamite', 'punitive', '', 1, 1);
 
-
-INSERT INTO player(name, position, role, character, health)
-VALUES('Aladár', 1, 1, 1, 5);
-INSERT INTO player(name, position, role, character, health)
-VALUES('Béla', 2, 2, 2, 4);
-INSERT INTO player(name, position, role, character, health)
-VALUES('Cecil', 3, 3, 3, 4);
-INSERT INTO player(name, position, role, character, health)
-VALUES('Dénes', 4, 4, 4, 3);
 
 
 
