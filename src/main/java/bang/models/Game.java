@@ -13,6 +13,12 @@ public class Game {
     ArrayList<Character> listofCharacters;
     ArrayList<Card> deck;
 
+    public Game() throws SQLException {
+        this.listOfRoles = getRoles();
+        this.listofCharacters = getCharacters();
+        this.deck = buildDeck();
+    }
+
     public ArrayList<Card> buildDeck() throws SQLException {
         TableFactory tf = new TableFactory();
         String deckGetterQuery = "SELECT * FROM card";
@@ -44,9 +50,21 @@ public class Game {
         return roles;
     }
 
+    public ArrayList<Character> getCharacters() throws SQLException {
+        TableFactory tf = new TableFactory();
+        String characterGetterQuery = "SELECT * FROM character";
+        ArrayList<ArrayList<String>> characterNestedList = tf.getData(characterGetterQuery);
+        ArrayList<Character> characters = new ArrayList<Character>();
+        for (int i = 0; i<characterNestedList.size(); i++){
+            characters.add(new Character(characterNestedList.get(i).get(1), characterNestedList.get(i).get(2),
+                    characterNestedList.get(i).get(3)));
+        }
+        return characters;
+    }
+
     public static void main(String[] args) throws SQLException {
         Game g = new Game();
-        ArrayList<Role> sg = g.getRoles();
+        ArrayList<Character> sg = g.getCharacters();
         for (int i = 0; i<sg.size(); i++){
             System.out.println(sg.get(i).name);
         }

@@ -7,4 +7,9 @@ public class Role {
 
     String name;
     String mission;
+
+    public Role(String name, String mission) {
+        this.name = name;
+        this.mission = mission;
+    }
 }
