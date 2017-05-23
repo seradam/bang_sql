@@ -1,4 +1,4 @@
-package models;
+package bang.models;
 
 import java.util.ArrayList;
 

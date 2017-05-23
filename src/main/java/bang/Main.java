@@ -1,3 +1,5 @@
+package bang;
+
 import java.sql.SQLException;
 
 /**

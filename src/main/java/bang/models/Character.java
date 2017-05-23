@@ -1,4 +1,4 @@
-package models;
+package bang.models;
 
 /**
  * Created by seradam on 2017.05.22..
