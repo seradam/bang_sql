@@ -61,12 +61,4 @@ public class Game {
         }
         return characters;
     }
-
-    public static void main(String[] args) throws SQLException {
-        Game g = new Game();
-        ArrayList<Character> sg = g.getCharacters();
-        for (int i = 0; i<sg.size(); i++){
-            System.out.println(sg.get(i).name);
-        }
-    }
 }
