@@ -25,6 +25,15 @@ public class TableFactory {
         return queryResult;
     }
 
+    public void updateDataWhenDrawCard(String tableName, String coulomnName, String newValue,
+                                       String identifierCoulomn, String identifierValue) throws SQLException {
+        String myQuery = "UPDATE " + tableName + " SET " + coulomnName + " = " + newValue +
+                " WHERE " + identifierCoulomn + " = " + identifierValue;
+        Connection conn = getConnection();
+        PreparedStatement pstmt = conn.prepareStatement(myQuery);
+        pstmt.executeUpdate();
+    }
+
     public void viewTable(String myQuery) throws SQLException {
 
         Connection conn = getConnection();
@@ -74,6 +83,12 @@ public class TableFactory {
         System.out.println("\n Nested list version of People who attacked the sheriff: \n");
         System.out.println(sg.getData(complicatedTestquery));
         System.out.println("\n" + sg.getData(oneLineQuery + "\n"));
+        sg.updateDataWhenDrawCard("card", "current_amount", "current_amount - 1", "card_id", "1");
+        String updateTesterQuery = "SELECT * FROM card WHERE card_id = 1";
+        sg.viewTable(updateTesterQuery);
+        sg.updateDataWhenDrawCard("character", "choosable", "false", "character_id", "1");
+        String updateTesterQuery2 = "SELECT * FROM character WHERE character_id = 1";
+        sg.viewTable(updateTesterQuery2);
 
     }
 
