@@ -2,12 +2,16 @@ package bang.models;
 
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Random;
+
 import bang.TableFactory;
 
 /**
  * Created by seradam on 2017.05.22..
  */
 public class Game {
+
+    TableFactory tf = new TableFactory();
 
     ArrayList<Role> listOfRoles;
     ArrayList<Character> listofCharacters;
@@ -20,7 +24,6 @@ public class Game {
     }
 
     public ArrayList<Card> buildDeck() throws SQLException {
-        TableFactory tf = new TableFactory();
         String deckGetterQuery = "SELECT * FROM card";
         ArrayList<ArrayList<String>> cardsNestedList = tf.getData(deckGetterQuery);
         ArrayList<Card> deck = new ArrayList<Card>();
@@ -36,7 +39,6 @@ public class Game {
     }
 
     public ArrayList<Role> getRoles() throws SQLException {
-        TableFactory tf = new TableFactory();
         String roleGetterQuery = "SELECT * FROM role";
         ArrayList<ArrayList<String>> roleNestedList = tf.getData(roleGetterQuery);
         ArrayList<Role> roles = new ArrayList<Role>();
@@ -51,7 +53,6 @@ public class Game {
     }
 
     public ArrayList<Character> getCharacters() throws SQLException {
-        TableFactory tf = new TableFactory();
         String characterGetterQuery = "SELECT * FROM character";
         ArrayList<ArrayList<String>> characterNestedList = tf.getData(characterGetterQuery);
         ArrayList<Character> characters = new ArrayList<Character>();
@@ -60,5 +61,39 @@ public class Game {
                     characterNestedList.get(i).get(3)));
         }
         return characters;
+    }
+
+    public Player createOnePlayer(String name, Integer position) throws SQLException {
+        Player player = new Player(name, position);
+        player.role = this.randomChooser(listOfRoles);
+        for (int i = 0; i<listOfRoles.size(); i++){
+            if (listOfRoles.get(i).name.equals(player.role.name)){
+                listOfRoles.remove(i);
+                break;
+            }
+        }
+        tf.updateDataWhenDrawCard("role", "current_amount", "current_amount - 1", "name", player.role.name);
+        player.character = this.randomChooser(listofCharacters);
+        for (int i = 0; i<listofCharacters.size(); i++){
+            if (listofCharacters.get(i).name.equals(player.character.name)){
+                listofCharacters.remove(i);
+                break;
+            }
+        }
+        tf.updateDataWhenDrawCard("character", "choosable", "false", "name", player.character.name);
+        player.health = player.character.initialLives;
+        if (player.role.name.equals("Sheriff")){
+            player.health += 1;
+        }
+        player.hand = new ArrayList<Card>();
+        player.board = new ArrayList<Card>();
+
+        return player;
+    }
+
+    public <T> T randomChooser(ArrayList<T> inputList){
+        Random random = new Random();
+        int listIndex = random.nextInt(inputList.size());
+        return inputList.get(listIndex);
     }
 }
