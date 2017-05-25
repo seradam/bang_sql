@@ -1,5 +1,11 @@
 package bang;
 
+import org.apache.ibatis.jdbc.ScriptRunner;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.Reader;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -55,6 +61,14 @@ public class TableFactory {
 
     }
 
+    public void restartInitialGameState() throws SQLException, FileNotFoundException {
+        String filePath = "/home/seradam/bang_sql/src/main/resources/sql/before_game.sql";
+        Connection conn = getConnection();
+        ScriptRunner runner = new ScriptRunner(conn);
+        Reader reader = new BufferedReader(new FileReader(filePath));
+        runner.runScript(reader);
+    }
+
     private Connection getConnection() throws SQLException {
         return DriverManager.getConnection(
                 "jdbc:postgresql://localhost:5432/bang",
@@ -62,7 +76,7 @@ public class TableFactory {
                 "mimikri45");
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         String simpleTestQuery = "SELECT * FROM player";
         String complicatedTestquery = "SELECT player.name, role.name AS role FROM role "+
                 "JOIN player ON role.role_id = player.role "+
@@ -74,21 +88,23 @@ public class TableFactory {
                 "WHERE role.name = 'Sheriff')";
         String oneLineQuery = "SELECT * FROM player WHERE player_id = 1";
         TableFactory sg = new TableFactory();
-        System.out.println("\n Content of player table: \n");
-        sg.viewTable(simpleTestQuery);
-        System.out.println("\n People who attacked the sheriff: \n");
-        sg.viewTable(complicatedTestquery);
-        System.out.println("\n Nested list version of Content of player table: \n");
-        System.out.println(sg.getData(simpleTestQuery));
-        System.out.println("\n Nested list version of People who attacked the sheriff: \n");
-        System.out.println(sg.getData(complicatedTestquery));
-        System.out.println("\n" + sg.getData(oneLineQuery + "\n"));
+//        System.out.println("\n Content of player table: \n");
+//        sg.viewTable(simpleTestQuery);
+//        System.out.println("\n People who attacked the sheriff: \n");
+//        sg.viewTable(complicatedTestquery);
+//        System.out.println("\n Nested list version of Content of player table: \n");
+//        System.out.println(sg.getData(simpleTestQuery));
+//        System.out.println("\n Nested list version of People who attacked the sheriff: \n");
+//        System.out.println(sg.getData(complicatedTestquery));
+//        System.out.println("\n" + sg.getData(oneLineQuery + "\n"));
         sg.updateDataWhenDrawCard("card", "current_amount", "current_amount - 1", "card_id", "1");
         String updateTesterQuery = "SELECT * FROM card WHERE card_id = 1";
         sg.viewTable(updateTesterQuery);
-        sg.updateDataWhenDrawCard("character", "choosable", "false", "character_id", "1");
-        String updateTesterQuery2 = "SELECT * FROM character WHERE character_id = 1";
-        sg.viewTable(updateTesterQuery2);
+        sg.restartInitialGameState();
+        sg.viewTable(updateTesterQuery);
+//        sg.updateDataWhenDrawCard("character", "choosable", "false", "character_id", "1");
+//        String updateTesterQuery2 = "SELECT * FROM character WHERE character_id = 1";
+//        sg.viewTable(updateTesterQuery2);
 
     }
 
