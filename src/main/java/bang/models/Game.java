@@ -72,7 +72,8 @@ public class Game {
                 break;
             }
         }
-        tf.updateDataWhenDrawCard("role", "current_amount", "current_amount - 1", "name", player.role.name);
+        String roleIdentifier = "'"+player.role.name+"'";
+        tf.updateDataWhenDrawCard("role", "current_amount", "current_amount - 1", "name", roleIdentifier);
         player.character = this.randomChooser(listofCharacters);
         for (int i = 0; i<listofCharacters.size(); i++){
             if (listofCharacters.get(i).name.equals(player.character.name)){
@@ -80,7 +81,8 @@ public class Game {
                 break;
             }
         }
-        tf.updateDataWhenDrawCard("character", "choosable", "false", "name", player.character.name);
+        String characterIdentifier = "'"+player.character.name+"'";
+        tf.updateDataWhenDrawCard("character", "choosable", "false", "name", characterIdentifier);
         player.health = player.character.initialLives;
         if (player.role.name.equals("Sheriff")){
             player.health += 1;
@@ -95,5 +97,19 @@ public class Game {
         Random random = new Random();
         int listIndex = random.nextInt(inputList.size());
         return inputList.get(listIndex);
+    }
+
+    public static void main(String[] args) throws SQLException {
+        Game g = new Game();
+        Player player = g.createOnePlayer("Aladár", 1);
+        System.out.println(player.name);
+        System.out.println(player.position);
+        System.out.println(player.role.name);
+        System.out.println(player.character.name);
+        System.out.println(player.health);
+        System.out.println(player.hand);
+        System.out.println(player.board);
+
+
     }
 }
