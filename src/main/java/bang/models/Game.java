@@ -1,5 +1,6 @@
 package bang.models;
 
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Random;
@@ -17,7 +18,8 @@ public class Game {
     ArrayList<Character> listofCharacters;
     ArrayList<Card> deck;
 
-    public Game() throws SQLException {
+    public Game() throws SQLException, FileNotFoundException {
+        tf.restartInitialGameState();
         this.listOfRoles = getRoles();
         this.listofCharacters = getCharacters();
         this.deck = buildDeck();
@@ -73,7 +75,7 @@ public class Game {
             }
         }
         String roleIdentifier = "'"+player.role.name+"'";
-        tf.updateDataWhenDrawCard("role", "current_amount", "current_amount - 1", "name", roleIdentifier);
+        tf.setData("role", "current_amount", "current_amount - 1", "name", roleIdentifier);
         player.character = this.randomChooser(listofCharacters);
         for (int i = 0; i<listofCharacters.size(); i++){
             if (listofCharacters.get(i).name.equals(player.character.name)){
@@ -82,7 +84,7 @@ public class Game {
             }
         }
         String characterIdentifier = "'"+player.character.name+"'";
-        tf.updateDataWhenDrawCard("character", "choosable", "false", "name", characterIdentifier);
+        tf.setData("character", "choosable", "false", "name", characterIdentifier);
         player.health = player.character.initialLives;
         if (player.role.name.equals("Sheriff")){
             player.health += 1;
@@ -99,7 +101,7 @@ public class Game {
         return inputList.get(listIndex);
     }
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, FileNotFoundException {
         Game g = new Game();
         Player player = g.createOnePlayer("Aladár", 1);
         System.out.println(player.name);
